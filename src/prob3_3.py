@@ -15,11 +15,12 @@ mu = 0.1
 components = 2
 iterations = 200
 
+# Experiment errors
 e = np.zeros((100,2))
 
-datamodes = ["uniform", "uniform/beta", "uniform/normal", "multivariate normal"]
-mode = datamodes[0]
-print("Selected data distribution(s): " + mode)
+Distribs = ['uniform', 'uniform/beta', 'uniform/normal', 'multivariate normal']
+distrib = Distribs[0]
+print("Selected data distribution(s): " + distrib)
 
 # calculate error of ICA estimate in 100 experiments, plot data for first experiment
 for i in range(100):
@@ -27,20 +28,21 @@ for i in range(100):
         print("Experiment " + str(i) + "/100")
 
     # generate data
-    if mode == "uniform":
+    if distrib=='uniform':
         s = np.random.rand(N, 2) # s uniform distribution U(0,1)
-    elif mode == "uniform/uniform":
+    elif distrib == 'uniform/uniform':
         s = np.concatenate((np.random.rand(N, 1), 
                             np.random.beta(0.1, 0.1, size=(N,1))), 
                            axis=1) # s1 U(0,1), s2 beta distribution B(0.1, 0.1)
-    elif mode == "uniform/normal":
+    elif distrib == 'uniform/normal':
         s = np.concatenate((np.random.rand(N, 1), 
                             np.random.normal(size=(N,1))), 
                            axis=1) # s1 U(0,1), s2 normal distribution N(0, 1)
     else:
         s = np.random.multivariate_normal(mean=np.array([0.0, 1.0]), 
                                           cov=np.array([[2.0, 0.25], [0.25, 1.0]]), 
-                                          size=N) # s multivariate normal distribution with mu=(0, 1), Sigma=[2 0.25; 0.25 1]
+                                          size=N) # s multivariate normal distribution with 
+                                                  # mu=(0, 1), Sigma=[2 0.25; 0.25 1]
 
     # plot source data
     if i == 0:
