@@ -59,7 +59,7 @@ kernel_ridge_argmax = t[np.argmax(y_pred)][0]
 
 plt.plot(t, y_pred, label='reconstructed signal')
 plt.scatter(x, y, label='data points', color='r', s=10)
-plt.xlabel("Time (s)")
+plt.xlabel("Time")
 plt.ylabel("y(t)")
 plt.title("Problem 3.6")
 plt.vlines(5.1, -0.7, 1.2, colors='r', linestyles='dashed', label='Eyeball argmax = 5.1')
