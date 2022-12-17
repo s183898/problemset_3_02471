@@ -6,7 +6,7 @@ from scipy.optimize import curve_fit
 # 3.6
 
 # Load .mat file
-mat_file = scipy.io.loadmat('data/problem3_6.mat')
+mat_file = scipy.io.loadmat('src/data/problem3_6.mat')
 
 # Extract data from .mat file and create t
 x = mat_file["t"].T
@@ -16,9 +16,9 @@ diff = x[1] - x[0]
 sample_multiplier = 20
 
 t = np.array([np.arange(min(x),max(x)+diff,diff/sample_multiplier)]).T
+
 t_n = t.shape[0]
 x_n = x.shape[0]
-
 
 sigma = 0.5
 C = 0.2
@@ -39,7 +39,6 @@ for i in range(t_n):
         kernelVec[j] = np.exp(-1/(sigma**2)*(t[i] - x[j])**2)
 
     y_pred[i] = y.T@np.linalg.inv(K+C*I)@kernelVec
-
 y_pred_sampled = y_pred[::sample_multiplier]
 
 print("Check supersampling is done correctly:", np.allclose(y_pred_sampled, y_pred[::sample_multiplier], atol=1e-10))
@@ -54,15 +53,25 @@ SNR_dB = 10*np.log10(SNR)
 
 print("SNR: ", SNR)
 print("SNR_dB: ", SNR_dB)
-
 kernel_ridge_argmax = t[np.argmax(y_pred)][0]
+print(f"Kernel Ridge argmax: {kernel_ridge_argmax:.2f}")
 
-plt.plot(t, y_pred, label='reconstructed signal')
-plt.scatter(x, y, label='data points', color='r', s=10)
-plt.xlabel("Time")
-plt.ylabel("y(t)")
-plt.title("Problem 3.6")
-plt.vlines(5.1, -0.7, 1.2, colors='r', linestyles='dashed', label='Eyeball argmax = 5.1')
-plt.vlines(kernel_ridge_argmax, -0.7, 1.2, colors='g', linestyles="dashed" , label=f'Kernel-Ridge argmax = {kernel_ridge_argmax:.2f}')
-plt.legend()
+fig, ax = plt.subplots()
+fig.set_size_inches(10, 5)
+ax.plot(t, y_pred, label='reconstructed signal', color = 'green')
+ax.scatter(x, y, label='original signal', color='black', s=10)
+ax.set_xlabel("Time (t)")
+ax.set_ylabel("y(t)")
+ax.set_title("Kernel Ridge Regression fit, C = 0.2, sigma = 0.5")
+ax.axvline(kernel_ridge_argmax, label = f'Kernel Ridge argmax = {kernel_ridge_argmax:.2f}', color = 'blue', linestyle = 'dashed')
+ax.axvline(5.1, label = 'Eyeball argmax = 5.1', color = 'red', linestyle = 'dashed')
+
+ax.legend()
+x_ticks = np.append(ax.get_xticks(), kernel_ridge_argmax)
+ax.set_xticks(x_ticks)
+ax.set_aspect('auto')
+ax.set_xlim([-0.2, 12.6])
+ax.set_xbound(lower=-0.2, upper=12.8)
+
 plt.show()
+

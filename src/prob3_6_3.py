@@ -12,7 +12,7 @@ kernel_type = 'Gaussian'
 kernel_params = 0.6
 C = 1
 
-mat_file = scipy.io.loadmat('data/problem3_6.mat')
+mat_file = scipy.io.loadmat('src/data/problem3_6.mat')
 
 # sample_multi = 8
 diff = 0.2
@@ -36,7 +36,7 @@ print("Check supersampling is done correctly:", np.allclose(y_pred_sampled, y_pr
 
 def outlier_detection(y,y_pred, regressor, epsilon, threshold):
     if threshold < 0:
-        print("Warning. Threshold should be positive. Setting threshold to 0.")
+        print("Warning. Threshold should be non-negative. Setting threshold to 0.")
         threshold = 0
 
     y_pred = regressor.predict(x)
@@ -61,31 +61,27 @@ print("SNR_dB: ", SNR_dB)
 SVM_argmax = t[np.argmax(y_pred)]
 
 # plot
-plt.figure(figsize=(16,10))
-plt.stem(x[regressor.support_], y[regressor.support_], linefmt = 'none', markerfmt='yo', label='support vector', basefmt=" ")
-plt.stem(x, y,  linefmt = 'none', markerfmt='k.', label='original signal', basefmt=" ")
-plt.plot(t, y_pred, color = 'red', label = 'SVR fit')
-plt.title("Support Vector Regression, C = %f" % C)
-plt.xlabel("Time")
-plt.ylabel("Amplitude")
-plt.legend()
+
+fig, ax = plt.subplots()
+fig.set_size_inches(10, 5)
+ax.axvline(SVM_argmax, label = f'SVR argmax = {SVM_argmax[0]:.2f}', color = 'blue', linestyle = 'dashed')
+ax.plot(t, y_pred, color = 'green', label = 'SVR fit')
+ax.stem(x[regressor.support_], y[regressor.support_], linefmt = 'none', markerfmt='yo', label='support vector', basefmt=" ")
+ax.stem(x, y,  linefmt = 'none', markerfmt='k.', label='original signal', basefmt=" ")
+ax.scatter(x[outliers], y[outliers], color = "red", label = "outliers", s = 70)
+ax.set_title(f"Support Vector Regression fit, C = {C}, epsilon = {epsilon}, gamma = {gamma:.2f}")
+ax.set_xlabel("Time (t)")
+ax.set_ylabel("y(t)")
+ax.set_ylim([-0.78, 1.05])
+
+x_ticks = np.append(ax.get_xticks(), SVM_argmax)
+ax.set_xticks(x_ticks)
+ax.legend()
+
+ax.set_aspect('auto')
+ax.set_xlim([-0.2, 12.6])
+ax.set_xbound(lower=-0.2, upper=12.8)
+
 plt.show()
 
-plt.figure(figsize=(16,10))
-plt.stem(x[outliers], y[outliers],  linefmt = 'none', markerfmt='yo', label='outliers', basefmt=" ")
-plt.stem(x, y, linefmt = 'none', markerfmt='k.', label='original signal', basefmt=" ")
-plt.plot(t, y_pred, color = 'red', label = 'SVR fit')
-plt.vlines(SVM_argmax, ymin = -0.35, ymax = np.max(y_pred), color = 'blue', label = f'SVR argmax = {SVM_argmax[0]:.2f}', linestyles = 'dashed')
-plt.title("Support Vector Regression, C = %f" % C)
-plt.xlabel("Time")
-plt.ylabel("Amplitude")
-plt.legend()
-plt.show()
-
-
-
-
-
-
-
-    
+   
