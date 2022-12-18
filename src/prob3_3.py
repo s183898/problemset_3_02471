@@ -96,7 +96,7 @@ for k in range(4):
         e[k,i] = ICAerr(Ahatn, An)
 
 # plot source data
-fig, axes = plt.subplots(2,2, figsize=(20,10))
+fig, axes = plt.subplots(2,2, figsize=(10,10))
 for k in range(4):
     if k == 0:
         coords = [0,0]
@@ -117,7 +117,7 @@ for k in range(4):
 plt.show()
 
 # plot observations
-fig, axes = plt.subplots(2,2, figsize=(20,10))
+fig, axes = plt.subplots(2,2, figsize=(10,10))
 for k in range(4):
     if k == 0:
         coords = [0,0]
@@ -139,7 +139,7 @@ for k in range(4):
 plt.show()
 
 # plot estimated sources (data projection on ICA axis)
-fig, axes = plt.subplots(2,2, figsize=(20,10))
+fig, axes = plt.subplots(2,2, figsize=(10,10))
 for k in range(4):
     if k == 0:
         coords = [0,0]
@@ -160,7 +160,7 @@ for k in range(4):
 plt.show()
 
 # plot error histograms
-fig, axes = plt.subplots(2,2, figsize=(20,10))
+fig, axes = plt.subplots(2,2, figsize=(10,10))
 for k in range(4):
     if k == 0:
         coords = [0,0]
