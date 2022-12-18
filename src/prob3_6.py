@@ -6,7 +6,7 @@ from scipy.optimize import curve_fit
 # 3.6
 
 # Load .mat file
-mat_file = scipy.io.loadmat('src/data/problem3_6.mat')
+mat_file = scipy.io.loadmat('data/problem3_6.mat')
 
 # Extract data from .mat file and create t
 x = mat_file["t"].T
@@ -39,6 +39,7 @@ for i in range(t_n):
         kernelVec[j] = np.exp(-1/(sigma**2)*(t[i] - x[j])**2)
 
     y_pred[i] = y.T@np.linalg.inv(K+C*I)@kernelVec
+
 y_pred_sampled = y_pred[::sample_multiplier]
 
 print("Check supersampling is done correctly:", np.allclose(y_pred_sampled, y_pred[::sample_multiplier], atol=1e-10))

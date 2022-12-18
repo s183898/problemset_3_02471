@@ -12,7 +12,7 @@ kernel_type = 'Gaussian'
 kernel_params = 0.6
 C = 1
 
-mat_file = scipy.io.loadmat('src/data/problem3_6.mat')
+mat_file = scipy.io.loadmat('data/problem3_6.mat')
 
 # sample_multi = 8
 diff = 0.2
