@@ -4,7 +4,7 @@ from scipy import io
 from sklearn.linear_model import LassoCV
 
 # Load the data from the .mat file
-data = io.loadmat('problem3_1.mat')
+data = io.loadmat('data/problem3_1.mat')
 n = data['n']
 x = data['x']
 
