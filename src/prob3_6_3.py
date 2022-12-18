@@ -12,7 +12,7 @@ kernel_type = 'Gaussian'
 kernel_params = 0.6
 C = 1
 
-mat_file = scipy.io.loadmat('src/data/problem3_6.mat')
+mat_file = scipy.io.loadmat('data/problem3_6.mat')
 
 # For ease of use t is sampled as an inverse multiple of the original sampling rate
 sample_multi = 20
