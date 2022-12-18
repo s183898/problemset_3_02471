@@ -8,8 +8,6 @@ data = io.loadmat('data/problem3_1.mat')
 n = data['n']
 x = data['x']
 
-
-
 # Create the DCT matrix
 l = 2**9
 Phi = np.zeros((len(n), l))
@@ -28,11 +26,13 @@ K = np.count_nonzero(lasso_coefficients)
 aj = lasso.coef_[lasso_coefficients != 0]
 mj = np.where(lasso_coefficients != 0)[0]
 opt_alpha = lasso.alpha_
+
 # Print the results
 print("K = ", K)
 print("aj = ", aj)
 print("mj = ", mj)
 print("alpha = ", opt_alpha)
+
 #%% evaluate the optimal model
 from sklearn.metrics import mean_squared_error
 
@@ -58,8 +58,7 @@ plt.ylabel('coefficient values a_j')
 plt.title('Lasso coefficients')
 plt.show()
 #save figure as pdf
-plt.savefig('lasso_coefficients.pdf')
-
+plt.savefig('plots/lasso_coefficients.pdf')
 
 # %% visualize the original and reconstructed signals
 plt.figure()
@@ -70,9 +69,5 @@ plt.ylabel('signal values x_j')
 plt.title('Original and reconstructed signals')
 plt.legend()
 plt.show()
-
 #save figure as pdf
-plt.savefig('original_reconstructed.pdf')
-
-
-
+plt.savefig('plots/original_reconstructed.pdf')
