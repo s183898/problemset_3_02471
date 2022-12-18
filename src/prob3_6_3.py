@@ -14,12 +14,12 @@ C = 1
 
 mat_file = scipy.io.loadmat('src/data/problem3_6.mat')
 
-# sample_multi = 8
-diff = 0.2
+# For ease of use t is sampled as an inverse multiple of the original sampling rate
 sample_multi = 20
 # Extract data from .mat file
 x = np.array(mat_file["t"])
 y = mat_file["y"][0]
+diff = x[1]-x[0]
 t = np.array([np.arange(min(x[0]),max(x[0])+diff,diff/sample_multi)]).T
 
 x = x.T

@@ -1,9 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy.io
-from scipy.optimize import curve_fit
 
-# 3.6
+# 3.6.1 and 3.6.2
 
 # Load .mat file
 mat_file = scipy.io.loadmat('src/data/problem3_6.mat')
@@ -15,6 +14,7 @@ y = mat_file["y"][0]
 diff = x[1] - x[0]
 sample_multiplier = 20
 
+# For ease of use t is sampled as an inverse multiple of the original sampling rate
 t = np.array([np.arange(min(x),max(x)+diff,diff/sample_multiplier)]).T
 
 t_n = t.shape[0]

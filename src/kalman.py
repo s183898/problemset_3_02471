@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 q = 1
 dt = 0.1
-s = 0.5
+s = 0.2
 F    = np.array([
     [1, dt],
     [0, 1],
@@ -25,7 +25,7 @@ P0 = np.identity(2)
 
 # Simulate data
 def sim(seed, steps):
-    np.random.seed(seed+2001)
+    np.random.seed(seed)
 
     X = np.zeros((len(F), steps))
     Y = np.zeros((len(H), steps))
@@ -55,39 +55,48 @@ def sim(seed, steps):
 
         kf_m[:, k] = m[:, 0]
         kf_P[:, :, k] = P
+    
+    X_real = X[0, :]
+    X_kf = kf_m[0, :]
+    X_obs = Y[0, :]
 
-    rmse_raw = np.sqrt(np.mean(np.sum((Y - X[:1, :])**2, 1)))
-    rmse_kf = np.sqrt(np.mean(np.sum((kf_m[:1, :] - X[:1, :])**2, 1)))
+    rmse_raw = np.sqrt(np.mean((X_real - X_obs)**2))
+    rmse_kf = np.sqrt(np.mean((X_real - X_kf)**2))
+
 
     return X, Y, kf_m, rmse_raw, rmse_kf
 
-X, Y, kf_m, rmse_raw, rmse_kf = sim(0, 1000)
 
-print("RMSE of raw estimate: ", rmse_raw)
-print("RMSE of KF estimate: ", rmse_kf)
+def plot_single_rollout(seed, steps):
+    X, Y, kf_m, rmse_raw, rmse_kf = sim(seed, steps)
 
-plt.figure()
-plt.plot(X[0, :], '-')
-plt.plot(Y[0, :], 'o')
-plt.xlabel("n")
-plt.ylabel("x")
-# plt.xticks(range(0, 10))
-plt.plot(kf_m[0, :], '-')
-plt.title("Object moving in 1D")
-plt.legend(['True Trajectory', 'Measurements', 'Filter Estimate'])
-plt.show()
+    print("RMSE of raw estimate: ", rmse_raw)
+    print("RMSE of KF estimate: ", rmse_kf)
 
-# Below 1000 sumulations are run and the RMSE of the raw and KF estimates are plotted
+    plt.figure()
+    plt.plot(X[0, :], '-')
+    plt.plot(Y[0, :], 'o')
+    plt.xlabel("n")
+    plt.ylabel("p (position)")
+    # plt.xticks(range(0, 10))
+    plt.plot(kf_m[0, :], '-')
+    plt.title("Object moving in 1D, sigma = 0.2, q = 1, dt = 0.1")
+    plt.legend(['True Trajectory', 'Measurements', 'Filter Estimate'])
+    plt.show()
+
+plot_single_rollout(0, 10)
+
+
 def mean_rmse(n, rang = range(1,101,5)):
-    means_kf = np.zeros(len(rang))
-    means_raw =  np.zeros(len(rang))
+    means_kf = np.zeros(n)
+    means_raw =  np.zeros(n)
 
     for index,j in enumerate(rang):
         rmse_raw = np.zeros(n)
         rmse_kf = np.zeros(n)
 
-        for i in range(n):
-            X, Y, kf_m, rmse_raw[i], rmse_kf[i] = sim(i, j)
+        for i in n:
+            _, _, _, rmse_raw[i], rmse_kf[i] = sim(n, j)
 
         mean_rmse_raw = np.mean(rmse_raw)
         mean_rmse_kf = np.mean(rmse_kf)
@@ -97,36 +106,31 @@ def mean_rmse(n, rang = range(1,101,5)):
 
     return means_kf, means_raw
 
-# means_kf, means_raw = mean_rmse(1000)
 # np.save('means_kf.npy', means_kf)
 # np.save('means_raw.npy', means_raw)
 
-def variable_plot():
-    means_kf = np.load('means_kf.npy')
-    means_raw = np.load('means_raw.npy')
+def variable_step_plot(n, rang = range(1,101,5)):
+
+    means_kf, means_raw = mean_rmse(n, rang)
 
     plt.figure()
-    plt.plot(range(1,101,5), means_raw, label='Raw')
-    plt.plot(range(1,101,5), means_kf, label='KF')
+    plt.plot(rang, means_raw, label='Observations')
+    plt.plot(rang, means_kf, label='KF estimate')
     plt.xlabel('Number of steps/observations')
     plt.ylabel('RMSE')
     plt.legend()
-    xticks = np.linspace(10,100,10)
-    xticks = np.append(xticks, 1)
-    xticks = np.append(xticks, 100)
-    plt.xticks(xticks)
-    plt.title('RMSE of raw observations and KF estimates')
-
+    plt.xticks([1,5,10,20,30,40,50,60,70,80,90,100])
+    plt.title('RMSE of observations and KF estimates')
     plt.show()
 
 
-# plt.figure()
-# plt.hist(rmse_raw, bins=20, alpha=0.5, label='Raw')
-# plt.hist(rmse_kf, bins=20, alpha=0.5, label='KF')
-# plt.xlabel('RMSE')
-# plt.ylabel('Frequency')
-# plt.legend()
-# plt.title('RMSE of raw and KF estimates')
-
-# plt.show()
+def single_rollout_hist(rmse_raw, rmse_kf):
+    plt.figure()
+    plt.hist(rmse_raw, bins=20, alpha=0.5, label='Raw')
+    plt.hist(rmse_kf, bins=20, alpha=0.5, label='KF')
+    plt.xlabel('RMSE')
+    plt.ylabel('Frequency')
+    plt.legend()
+    plt.title('RMSE of raw and KF estimates')
+    plt.show()
 
