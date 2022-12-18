@@ -58,7 +58,7 @@ plt.ylabel('coefficient values a_j')
 plt.title('Lasso coefficients')
 plt.show()
 #save figure as pdf
-plt.savefig('plots/lasso_coefficients.pdf')
+#plt.savefig('plots/lasso_coefficients.pdf')
 
 # %% visualize the original and reconstructed signals
 plt.figure()
@@ -70,4 +70,4 @@ plt.title('Original and reconstructed signals')
 plt.legend()
 plt.show()
 #save figure as pdf
-plt.savefig('plots/original_reconstructed.pdf')
+#plt.savefig('plots/original_reconstructed.pdf')
